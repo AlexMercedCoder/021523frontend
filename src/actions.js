@@ -1,15 +1,21 @@
 import url from "./url";
 import { redirect } from "react-router-dom";
 
-export async function CreateAction({ request }) {
-  // get the form data
+const generateTodoObject = async (request) => {
+    // get the form data
   const formData = await request.formData();
 
   // construct new todo
-  const newTodo = {
+  return {
     subject: formData.get("subject"),
     details: formData.get("details"),
   };
+} 
+
+export async function CreateAction({ request }) {
+  
+
+  const newTodo = await generateTodoObject(request)
 
   // request to create route in backend
   await fetch(url, {
@@ -25,14 +31,8 @@ export async function CreateAction({ request }) {
 }
 
 export async function UpdateAction({ request, params }) {
-    // get the form data
-    const formData = await request.formData();
-  
-    // construct new todo
-    const updatedTodo = {
-      subject: formData.get("subject"),
-      details: formData.get("details"),
-    };
+    
+    const updatedTodo = await generateTodoObject(request)
   
     // request to update route in backend
     await fetch(url + params.id + "/", {
